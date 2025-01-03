@@ -26,6 +26,13 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.example.conectavitalpoc.R
 import com.example.conectavitalpoc.presentation.theme.ConectaVitalPOCTheme
+import androidx.health.services.client.HealthServices
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import androidx.health.services.client.data.DataType
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,39 +42,10 @@ class MainActivity : ComponentActivity() {
 
         setTheme(android.R.style.Theme_DeviceDefault)
 
-        setContent {
-            WearApp("Android")
-        }
+        setContentView(R.layout.activity_main)
+
+        // Verficar os recursos de saúde suportados
+        // Determinar dados que serão obtidos
+
     }
-}
-
-@Composable
-fun WearApp(greetingName: String) {
-    ConectaVitalPOCTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
-        ) {
-            TimeText()
-            Greeting(greetingName = greetingName)
-        }
-    }
-}
-
-@Composable
-fun Greeting(greetingName: String) {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primary,
-        text = stringResource(R.string.hello_world, greetingName)
-    )
-}
-
-@Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
-@Composable
-fun DefaultPreview() {
-    WearApp("Preview Android")
 }
