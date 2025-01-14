@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Habilitar sensores -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <!-- Necessário para registrar novamente os dados na inicialização do dispositivo -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
