@@ -6,6 +6,7 @@
 
 package com.example.conectavitalpoc.presentation
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -35,9 +36,7 @@ import androidx.health.services.client.data.Availability
 import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataTypeAvailability
 import androidx.health.services.client.data.DeltaDataType
-import androidx.health.services.client.data.SampleDataPoint
 import androidx.health.services.client.unregisterMeasureCallback
-import kotlinx.coroutines.channels.trySendBlocking
 
 class MainActivity : ComponentActivity() {
 
@@ -98,6 +97,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // Configura o monitoramento de ritmo cardíaco
+    @SuppressLint("SetTextI18n")
     private suspend fun setupPassiveMonitoring() {
         try {
             // Verifica se o dispositivo suporta monitoramento passivo de ritmo cardíaco
@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun disablePassiveMonitoring() {
+    private fun disablePassiveMonitoring() {
         try {
             passiveMonitoringClient.clearPassiveListenerServiceAsync()
             Log.d("PassiveMonitoring", "Monitoramento passivo desativado com sucesso.")
@@ -145,6 +145,7 @@ class MainActivity : ComponentActivity() {
     // Handler e Runnable para simulação
     private val handler = Handler(Looper.getMainLooper())
     private val simulationRunnable = object : Runnable {
+        @SuppressLint("SetTextI18n")
         override fun run() {
             val syntheticHeartRate = (60..100).random() // Gera valor aleatório
             Log.d("Simulation", "Simulação: Ritmo cardíaco gerado: $syntheticHeartRate BPM")
@@ -153,6 +154,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun startRealTimeMeasurement() {
         lifecycleScope.launch {
             try {
@@ -209,6 +211,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun stopRealTimeMeasurement() {
         lifecycleScope.launch {
             try {
@@ -266,6 +269,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private val heartRateReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
             val heartRate = intent.getDoubleExtra("heart_rate", -1.0)
             if (heartRate >= 0) {
