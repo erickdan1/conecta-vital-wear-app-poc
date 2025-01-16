@@ -34,6 +34,7 @@
             android:theme="@style/MainActivityTheme.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.example.HEART_RATE_UPDATE" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

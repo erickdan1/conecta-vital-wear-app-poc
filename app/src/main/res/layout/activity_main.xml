@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
 
+    <!-- Texto para exibir os dados -->
     <TextView
         android:id="@+id/heartRateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aguardando dados..."
-        android:textSize="18sp"
-        android:textColor="@android:color/black" />
+        android:text="Ritmo cardíaco não monitorado."
+        android:textAlignment="center"
+        android:textSize="14sp" />
+
+    <!-- Toggle para ativar/desativar o monitoramento passivo -->
+    <Switch
+        android:id="@+id/passiveMonitoringToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Monitoramento Passivo" />
+
+    <!-- Botão para iniciar/parar a medição em tempo real -->
+    <Button
+        android:id="@+id/measureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Iniciar Medição" />
+
 </LinearLayout>
