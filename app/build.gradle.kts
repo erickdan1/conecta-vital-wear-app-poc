@@ -70,4 +70,9 @@ dependencies {
     implementation("androidx.health:health-services-client:1.1.0-alpha03")
     implementation("androidx.concurrent:concurrent-futures-ktx:1.2.0")
     implementation("com.google.guava:guava:33.3.1-android")
+
+    // Retrofit para requisições HTTP
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    // Converter JSON usando Gson
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 }
