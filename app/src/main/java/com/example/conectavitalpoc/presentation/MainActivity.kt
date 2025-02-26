@@ -41,6 +41,51 @@ import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataTypeAvailability
 import androidx.health.services.client.data.DeltaDataType
 import androidx.health.services.client.unregisterMeasureCallback
+import com.example.conectavitalpoc.data.model.SensorData
+import com.example.conectavitalpoc.data.remote.RetrofitInstance
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+
+object SecureStorage {
+    private const val PREFS_NAME = "secure_prefs"
+    private const val HEART_RATE_KEY = "heart_rate"
+
+    fun saveHeartRate(context: Context, heartRate: Double) {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        sharedPreferences.edit()
+            .putString(HEART_RATE_KEY, heartRate.toString())
+            .apply()
+    }
+
+    fun getHeartRate(context: Context): Double? {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        return sharedPreferences.getString(HEART_RATE_KEY, null)?.toDoubleOrNull()
+    }
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -59,6 +104,12 @@ class MainActivity : ComponentActivity() {
 
     // Declaração de uma variável para armazenar o callback
     private var measureCallback: MeasureCallback? = null
+
+    // Armazena a última medição recebida
+    private var lastHeartRateMeasurement: Double? = null
+
+    // Job que gerencia o envio periódico da última medição
+    private var measurementJob: Job? = null
 
     // Launcher para solicitar a permissão BODY_SENSORS em tempo de execução
     private val bodySensorsPermissionLauncher: ActivityResultLauncher<String> =
@@ -184,6 +235,8 @@ class MainActivity : ComponentActivity() {
                         val heartRateData = data.getData(DataType.HEART_RATE_BPM)
                         if (heartRateData.isNotEmpty()) {
                             val heartRateBpm = heartRateData.first().value
+                            // Atualiza a última medição recebida
+                            lastHeartRateMeasurement = heartRateBpm
                             Log.d("RealTimeMeasurement", "Frequência cardíaca recebida: $heartRateBpm BPM")
                             heartRateTextView.text = "Ritmo cardíaco: ${heartRateBpm.toInt()} BPM"
                         } else {
@@ -201,6 +254,18 @@ class MainActivity : ComponentActivity() {
                 isMeasuring = true
                 measureButton.text = "Parar Medição"
                 Log.d("RealTimeMeasurement", "Medição em tempo real iniciada.")
+
+                // Inicia um job que aguarda 5 segundos para enviar somente um registro por sessão
+                measurementJob = lifecycleScope.launch {
+                    delay(5000L)  // Aguarda 5 segundos
+                    lastHeartRateMeasurement?.let { heartRateValue ->
+                        // Envia os dados para o backend
+                        enviarDadosDoSensor(heartRateValue)
+                        Log.d("RealTimeMeasurement", "Enviando medição: $heartRateValue BPM")
+                    }
+                    // Finaliza a medição após enviar o registro
+                    stopRealTimeMeasurement()
+                }
             } catch (e: Exception) {
                 Log.e("RealTimeMeasurement", "Erro ao iniciar medição: ${e.message}")
                 heartRateTextView.text = "Erro ao iniciar medição."
@@ -223,9 +288,33 @@ class MainActivity : ComponentActivity() {
             } catch (e: Exception) {
                 Log.e("RealTimeMeasurement", "Erro ao parar medição: ${e.message}")
             } finally {
+                // Cancela o job de envio, se ativo
+                measurementJob?.cancel()
+                measurementJob = null
                 // Atualiza o estado e o botão
                 isMeasuring = false
                 measureButton.text = "Iniciar Medição"
+            }
+        }
+    }
+
+    private fun enviarDadosDoSensor(heartRateBpm: Double) {
+        SecureStorage.saveHeartRate(this, heartRateBpm) // Armazena localmente antes de enviar
+        val sensorData = SensorData(
+            heartRate = heartRateBpm,
+            registrationDate = System.currentTimeMillis()
+        )
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.sensorApi.sendSensorData(sensorData)
+                if (response.isSuccessful) {
+                    Log.d("Retrofit", "Dados do sensor enviados com sucesso!")
+                } else {
+                    Log.e("Retrofit", "Erro ao enviar dados. Código HTTP: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("Retrofit", "Exceção ao enviar dados: ${e.message}")
             }
         }
     }
