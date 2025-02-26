@@ -45,6 +45,47 @@ import com.example.conectavitalpoc.data.model.SensorData
 import com.example.conectavitalpoc.data.remote.RetrofitInstance
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+
+object SecureStorage {
+    private const val PREFS_NAME = "secure_prefs"
+    private const val HEART_RATE_KEY = "heart_rate"
+
+    fun saveHeartRate(context: Context, heartRate: Double) {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        sharedPreferences.edit()
+            .putString(HEART_RATE_KEY, heartRate.toString())
+            .apply()
+    }
+
+    fun getHeartRate(context: Context): Double? {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        return sharedPreferences.getString(HEART_RATE_KEY, null)?.toDoubleOrNull()
+    }
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -258,6 +299,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun enviarDadosDoSensor(heartRateBpm: Double) {
+        SecureStorage.saveHeartRate(this, heartRateBpm) // Armazena localmente antes de enviar
         val sensorData = SensorData(
             heartRate = heartRateBpm,
             registrationDate = System.currentTimeMillis()
