@@ -17,12 +17,14 @@
         android:textSize="14sp" />
 
     <!-- Toggle para ativar/desativar o monitoramento passivo -->
+    <!--
     <Switch
         android:id="@+id/passiveMonitoringToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:text="Monitoramento Passivo" />
+        -->
 
     <!-- Botão para iniciar/parar a medição em tempo real -->
     <Button
