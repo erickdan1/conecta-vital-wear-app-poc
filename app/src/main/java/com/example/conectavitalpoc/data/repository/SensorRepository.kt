@@ -7,6 +7,17 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
+fun formatTimestamp(timestamp: Long): String {
+    val date = Date(timestamp)
+    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    format.timeZone = TimeZone.getTimeZone("America/Sao_Paulo") // Altere para o fuso desejado, como "America/Sao_Paulo"
+    return format.format(date)
+}
 
 class SensorRepository(private val context: Context) {
     private val api = RetrofitInstance.sensorApi
@@ -19,7 +30,7 @@ class SensorRepository(private val context: Context) {
         saveHeartRateLocally(heartRate)
         val sensorData = SensorData(
             heartRate = heartRate,
-            registrationDate = System.currentTimeMillis()
+            registrationDate = formatTimestamp(System.currentTimeMillis())
         )
         return@withContext try {
             val response = api.sendSensorData(sensorData)
