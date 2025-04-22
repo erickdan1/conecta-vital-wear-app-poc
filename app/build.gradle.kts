@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.core.splashscreen)
     implementation(libs.constraintlayout)
     implementation(libs.ui.test.junit4.android)
+    implementation(libs.wear)
+    implementation(libs.material)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)

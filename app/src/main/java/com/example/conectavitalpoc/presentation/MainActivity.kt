@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.example.conectavitalpoc.presentation.viewmodel.MainViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.conectavitalpoc.data.local.SecureStorage
 import com.example.conectavitalpoc.databinding.ActivityMainBinding
 
 class MainActivity : ComponentActivity() {
@@ -77,5 +78,16 @@ class MainActivity : ComponentActivity() {
                 viewModel.startRealTimeMeasurement()
             }
         }
+
+        fun checkTokenStatus() {
+            val token = SecureStorage.getAuthToken(this)
+
+            if (token != null) {
+                binding.tokenStatusTextView.text = "Autenticado ✅"
+            } else {
+                binding.tokenStatusTextView.text = "Token Expirado ❌"
+            }
+        }
+        checkTokenStatus()
     }
 }

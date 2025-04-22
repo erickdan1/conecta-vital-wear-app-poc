@@ -3,42 +3,59 @@ package com.example.conectavitalpoc.data.local
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.conectavitalpoc.utils.TokenUtils
 
 object SecureStorage {
-    private const val PREFS_NAME = "secure_prefs"
+    private const val PREFS_NAME = "auth_prefs"
     private const val HEART_RATE_KEY = "heart_rate"
+    private const val AUTH_TOKEN_KEY = "auth_token"
 
-    fun saveHeartRate(context: Context, heartRate: Double) {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-
-        val sharedPreferences = EncryptedSharedPreferences.create(
+    private fun getEncryptedSharedPreferences(context: Context) =
+        EncryptedSharedPreferences.create(
             context,
             PREFS_NAME,
-            masterKey,
+            MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build(),
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-        sharedPreferences.edit()
+    fun saveHeartRate(context: Context, heartRate: Double) {
+        getEncryptedSharedPreferences(context).edit()
             .putString(HEART_RATE_KEY, heartRate.toString())
             .apply()
     }
 
     fun getHeartRate(context: Context): Double? {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
+        return getEncryptedSharedPreferences(context)
+            .getString(HEART_RATE_KEY, null)
+            ?.toDoubleOrNull()
+    }
 
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            context,
-            PREFS_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+    // Salvar o token
+    fun saveAuthToken(context: Context, token: String) {
+        getEncryptedSharedPreferences(context).edit()
+            .putString(AUTH_TOKEN_KEY, token)
+            .apply()
+    }
 
-        return sharedPreferences.getString(HEART_RATE_KEY, null)?.toDoubleOrNull()
+    // Recuperar o token se ainda estiver válido
+    fun getAuthToken(context: Context): String? {
+        val sharedPreferences = getEncryptedSharedPreferences(context)
+        val token = sharedPreferences.getString(AUTH_TOKEN_KEY, null)
+
+        return if (token != null && !TokenUtils.isTokenExpired(token)) {
+            token
+        } else {
+            null // Token expirado ou não existente
+        }
+    }
+
+    // Limpar token
+    fun clearAuthToken(context: Context) {
+        getEncryptedSharedPreferences(context).edit()
+            .remove(AUTH_TOKEN_KEY)
+            .apply()
     }
 }

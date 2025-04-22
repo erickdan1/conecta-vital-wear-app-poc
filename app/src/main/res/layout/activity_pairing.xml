@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:padding="12dp">
+
+    <androidx.wear.widget.SwipeDismissFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <!-- Ícone de conexão -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@null"
+                android:src="@drawable/baseline_lock_24"
+                android:tint="#FFFFFF"
+                tools:ignore="UseAppTint" />
+
+            <!-- Título -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Conectar ao app"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:gravity="center" />
+
+            <!-- Descrição -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abra o app no celular para parear."
+                android:textColor="@android:color/darker_gray"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp" />
+
+            <!-- Botão de pareamento -->
+            <Button
+                android:id="@+id/connectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#02244B"
+                android:drawableStart="@drawable/baseline_bluetooth_24"
+                android:drawablePadding="2dp"
+                android:drawableTint="#FFFFFF"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="Conectar"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </androidx.wear.widget.SwipeDismissFrameLayout>
+</androidx.wear.widget.BoxInsetLayout>

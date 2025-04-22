@@ -1,37 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:background="#000000"
+    android:padding="12dp">
 
-    <!-- Texto para exibir os dados -->
-    <TextView
-        android:id="@+id/heartRateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ritmo cardíaco não monitorado."
-        android:textAlignment="center"
-        android:textSize="14sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <!-- Toggle para ativar/desativar o monitoramento passivo -->
-    <!--
-    <Switch
-        android:id="@+id/passiveMonitoringToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="Monitoramento Passivo" />
-        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="8dp">
 
-    <!-- Botão para iniciar/parar a medição em tempo real -->
-    <Button
-        android:id="@+id/measureButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="Iniciar Medição" />
+            <!-- Status da Conexão -->
+            <TextView
+                android:id="@+id/tokenStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Verificando conexão..."
+                android:textColor="#AAAAAA"
+                android:textSize="12sp" />
 
-</LinearLayout>
+            <!-- Título -->
+            <TextView
+                android:id="@+id/heartRateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="Sinais Vitais"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="#018786"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#018786"
+                android:clickable="false"
+                android:focusable="false">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:text="❤️ FC: 76 bpm"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botão de Nova Medição -->
+            <Button
+                android:id="@+id/measureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:backgroundTint="#02244B"
+                android:text="Nova Medição"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.wear.widget.BoxInsetLayout>

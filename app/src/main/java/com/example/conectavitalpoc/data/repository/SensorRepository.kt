@@ -20,7 +20,7 @@ fun formatTimestamp(timestamp: Long): String {
 }
 
 class SensorRepository(private val context: Context) {
-    private val api = RetrofitInstance.sensorApi
+    private val api = RetrofitInstance.createSensorApi(context)
 
     private fun saveHeartRateLocally(heartRate: Double) {
         SecureStorage.saveHeartRate(context, heartRate)
