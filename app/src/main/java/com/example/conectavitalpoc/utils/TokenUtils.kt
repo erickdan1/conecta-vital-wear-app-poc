@@ -5,7 +5,7 @@ import org.json.JSONObject
 
 object TokenUtils {
     // Retorna o tempo de expiração do token em milissegundos
-    fun extractExpirationFromJWT(token: String): Long? {
+    private fun extractExpirationFromJWT(token: String): Long? {
         return try {
             val parts = token.split(".")
             if (parts.size == 3) {
