@@ -5,16 +5,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.conectavitalpoc.presentation.viewmodel.MainViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.conectavitalpoc.data.local.SecureStorage
 import com.example.conectavitalpoc.databinding.ActivityMainBinding
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         // Observa atualizações da frequência cardíaca
         viewModel.heartRate.observe(this) { heartRate ->
             binding.heartRateTextView.text = heartRate?.let {
-                "Ritmo cardíaco: ${it.toInt()} BPM"
+                "❤️  ${it.toInt()} bpm"
             } ?: "Sem dados"
         }
 

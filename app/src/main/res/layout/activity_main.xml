@@ -30,7 +30,6 @@
 
             <!-- Título -->
             <TextView
-                android:id="@+id/heartRateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -40,27 +39,25 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.card.MaterialCardView
+            <!-- Card de frequência cardíaca -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
-                app:strokeColor="#018786"
-                app:strokeWidth="1dp"
-                app:cardBackgroundColor="#018786"
-                android:clickable="false"
-                android:focusable="false">
+                app:cardBackgroundColor="#181818">
 
                 <TextView
+                    android:id="@+id/heartRateTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="❤️ FC: 76 bpm"
+                    android:text="❤️  0 bpm"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:gravity="center"/>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <!-- Botão de Nova Medição -->
             <Button
